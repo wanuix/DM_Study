@@ -1,0 +1,96 @@
+"""
+    Logistic回归
+
+    主要思想：
+        根据现有数据对分类边界线建立回归公式，以此进行分类。
+
+    训练分类器时的做法就是寻找最佳拟合参数，使用的是最优化算法
+
+    优点：计算代价不高，易于理解和实现
+    缺点：容易欠拟合，分类精度可能不高
+    适用数据类型：数值型和标称型数据
+"""
+# oh my god 这本书全是坑，换书学习
+==================================================================
+"""
+    基于Logistic回归和Sigmoid函数的分类
+"""
+
+"""
+    基于最优化方法的最佳回归系数确定
+    梯度上升法——找到某函数的最大值
+"""
+
+"""
+    使用梯度上升法找到最佳参数
+    
+    每个回归系数初始化1
+    重复R次：
+        计算整个数据集的梯度
+        使用alpha * gradient 更新回归系数的向量
+        返回回归系数
+"""
+
+from numpy import *
+
+
+def loadDataSet():
+    """
+        数据集的读取
+    :return:
+    """
+    dataMat = []
+    labelMat = []
+    fr = open('testSet.txt')
+    for line in fr.readlines():
+        lineArr = line.strip().split()
+
+        # 把每行的第一第二个数据作为数据集
+        dataMat.append([1.0, float(lineArr[0]), float(lineArr[1])])
+
+        # 每行第三个作为标签
+        labelMat.append(int(lineArr[2]))
+    return dataMat, labelMat
+
+
+def sigmoid(inX):
+    """
+        定义Sigmoid函数,激活函数
+    :param inX:
+    :return:
+    """
+    return 1.0/(1+exp(-inX))
+
+
+def gradAscent(dataMatIn, classLabels):
+    """
+        梯度上升算法
+    :param dataMatIn: 2维NumPy数组，每列代表每个不同的特征，每行代表每个训练样本
+    :param classLabels: 类别标签
+    :return:
+    """
+    dataMatrix = mat(dataMatIn)             #convert to NumPy matrix
+    labelMat = mat(classLabels).transpose() #convert to NumPy matrix
+    m, n = shape(dataMatrix)
+
+    # 目标移动长度
+    alpha = 0.001
+
+    # 迭代次数
+    maxCycles = 500
+
+    weights = ones((n, 1))
+    for k in range(maxCycles):              #heavy on matrix operations
+        # Sigmoid函数
+        h = sigmoid(dataMatrix * weights)     #matrix mult
+
+        error = (labelMat - h)              #vector subtraction
+
+        weights = weights + alpha * dataMatrix.transpose() * error #matrix mult
+    return weights
+
+
+# # 测试
+# dataArr, labelMat = loadDataSet()
+# testMatrix = gradAscent(dataArr, labelMat)
+# print(testMatrix)
