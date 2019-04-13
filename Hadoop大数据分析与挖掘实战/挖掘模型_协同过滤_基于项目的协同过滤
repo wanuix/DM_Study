@@ -1,0 +1,10 @@
+将user.txt数据下载到Hadoop集群客户端，并上传到云平台
+$ hadoop fs -mkdir /user
+$ hadoop fs -mkdir /user/root
+$ hadoop fs -put user.txt /user/root/user.txt
+
+执行Mahout的recommenditembased命令，执行基于项目的协同过滤算法任务
+$ mahout recommenditembased -i /user/root/user.txt -o /user/root/output_user -n 3 -b galse -s SIMILARITY_EUCLIDEAN_DISTANCE --maxPrefsPerUser 7 --minPrefsPerUser 2 --maxPrefsInItemSimilarity 7 --tempDir /item/temp
+
+查看输出结果
+$ hadoop fs -cat /user/root/out_user/part-r-00000

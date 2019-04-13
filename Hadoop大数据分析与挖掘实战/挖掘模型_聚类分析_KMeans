@@ -1,0 +1,16 @@
+将sc.txt数据下载到Hadoop集群客户端，并上传到云平台
+$ hadoop fs -mkdir /user
+$ hadoop fs -mkdir /user/root
+$ hadoop fs -put sc.txt /user/root/sc.txt
+
+将文本文件转为序列文件
+Mahout中有一个类叫做InputDriver是用来将输入的文件转化成VectorWritable格式，
+这里需要注意一下它需要的输入为Text格式存储的输出为SequenceFile格式，
+也就是Kmeans所需要的格式，每一行为一个Vector必须用空格分隔。
+$ hadoop jar /usr/local/apache-mahout-distribution-0.13.0/mahout-integration-0.13.0.jar org.apache.mahout.clustering.conversion.InputDriver -i /user/root/sc.txt -o /user/root/kmeans_out
+
+执行Mahout的KMeans任务
+$ mahout kmeans -i /user/root/kmeans_out/part-m-0000 -o ouput-kmeans -c input/center -k 2 -x 5 -cl
+
+读取最后生成的聚类
+$ mahout clusterdump -i /user/root/output-kmeans/clusters-w-final

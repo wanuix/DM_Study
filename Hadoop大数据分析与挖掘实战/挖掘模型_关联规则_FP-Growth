@@ -1,0 +1,11 @@
+将fp.txt数据下载到Hadoop集群客户端，并上传到云平台
+$ hadoop fs -mkdir /user
+$ hadoop fs -mkdir /user/root
+$ hadoop fs -put fp.txt /user/root/fp.txt
+
+执行Mahout的Fp-Growth算法任务
+$ hadoop jar mahout-examples-0.13.0-job.jar org.apache.mahout.fpm.pfpgrowth.FP-GrowthDriver -i /user/root/fp.txt -o /user/root/fp/output -s 3 -k 10 -regex '[,]' -method mapreduce
+
+查看结果
+$ hadoop jar mahout-examples-0.13.0-job.jar org.apache.mahout.untils.SequenceFileDumper -i /user/root/fp/output/frequentpatterns/part-r-00000 -n 4
+
